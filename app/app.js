@@ -9,19 +9,8 @@ app.use(express.json());
 app.use(cookieParser())
 
 
-// globally handle error 
-
-// app.use((err, req, res, next) => {
-//     const statusCode = err.status || 500;
-//     res.status(statusCode).json({
-//         success: false,
-//         message: err.message || "Internal Server Error",
-//         errors: err.errors || [],
-//     });
-// });
 
 //routes
-
 app.use("/app/v1/user", userRouter);
 
 export default app;

@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import { loginService, registerService } from "../services/auth.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
@@ -6,21 +7,13 @@ import asyncHandler from "../utils/asyncHandler.js";
 const registerUser = asyncHandler(async (req, res) => {
 	const { name, email, password, status, role } = req.body;
 
-	console.log(name);
+	// console.log(name);
 
 	if (!name || !email || !password || !role) {
 		throw new ApiError(400, "Information not found");
 	}
 
-	const existUser = await User.findOne({ name });
-
-	if (existUser) {
-		throw new ApiError(403, "user already exist");
-	}
-
-	const user = new User({ name, email, password, role, status });
-
-	await user.save();
+	const user = await registerService(name, email, password, status, role);
 
 	res.json(new ApiResponse("201", user, "user created successfully"));
 });
@@ -34,24 +27,7 @@ const loginUser = asyncHandler(async (req, res) => {
 		throw new ApiError(400, "User credential not fund ");
 	}
 
-	const user = await User.findOne({ email });
-
-	// console.log(user);
-
-	if (!user) {
-		throw new ApiError(401, "Invalid user credential");
-	}
-
-	const isPasswordCorrect = await user.checkPasswordMatched(password);
-
-	if (!isPasswordCorrect) {
-		throw new ApiError("401", "Incorrect Password");
-	}
-
-	console.log(isPasswordCorrect);
-
-	const token = await user.generateAccessToken();
-	delete user._doc.password;
+	const { token, user } = await loginService(email, password);
 	// console.log(user);
 
 	res
@@ -60,23 +36,21 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const privateRoute = asyncHandler(async (req, res) => {
-
 	console.log("I am in Private Route");
 
-	res.json({message: "i am private"})
-	
+	res.json(new ApiResponse(200, req.user, "I am from vawou"));
+});
 
-})
-
-const logout = asyncHandler( async( req, res) => {
+const logout = asyncHandler(async (req, res) => {
 	const option = {
 		httpOnly: true,
 		secure: true,
 	};
-	res.status(200)
+	res
+		.status(200)
 		.clearCookie("accessToken", option)
 		.clearCookie("access-token", option)
 		.json(new ApiResponse(200, {}, "User Logged Out"));
-})
+});
 
 export { registerUser, loginUser, privateRoute, logout };
