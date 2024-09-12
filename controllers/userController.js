@@ -55,8 +55,28 @@ const loginUser = asyncHandler(async (req, res) => {
 	// console.log(user);
 
 	res
-		.cookie("access-token", token)
+		.cookie("accessToken", token)
 		.json(new ApiResponse(200, user, "Login Successful"));
 });
 
-export { registerUser, loginUser };
+const privateRoute = asyncHandler(async (req, res) => {
+
+	console.log("I am in Private Route");
+
+	res.json({message: "i am private"})
+	
+
+})
+
+const logout = asyncHandler( async( req, res) => {
+	const option = {
+		httpOnly: true,
+		secure: true,
+	};
+	res.status(200)
+		.clearCookie("accessToken", option)
+		.clearCookie("access-token", option)
+		.json(new ApiResponse(200, {}, "User Logged Out"));
+})
+
+export { registerUser, loginUser, privateRoute, logout };
