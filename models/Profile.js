@@ -1,4 +1,4 @@
-const { model, Schema, default: mongoose } = require("mongoose");
+import {Schema, model} from 'mongoose';
 
 const profileSchema = new Schema({
 	firstName: {
@@ -19,7 +19,7 @@ const profileSchema = new Schema({
 		required: true,
 	},
     user:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "User"
     }
 	
