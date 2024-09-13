@@ -1,11 +1,15 @@
 import User from "../models/User.js";
 
-const getUserByQuery = async ({ key, value }) => {
+const getUser = () => {
+	return User.find()
+}
+
+const getUserByQuery =  ({ key, value }) => {
 	if (key === "_id") {
-		return await User.findById(value);
+		return  User.findById(value);
 	}
 
-	return await User.findOne({ [key]: value });
+	return  User.findOne({ [key]: value });
 };
 
 const createNewUser = ({ name, email, password, role, status }) => {
@@ -13,4 +17,4 @@ const createNewUser = ({ name, email, password, role, status }) => {
 	return user.save();
 };
 
-export { getUserByQuery, createNewUser };
+export { getUserByQuery, createNewUser, getUser };

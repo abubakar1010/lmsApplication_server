@@ -1,56 +1,42 @@
-import User from "../models/User.js";
-import { loginService, registerService } from "../services/auth.js";
+import { getUser, getUserByQuery } from "../services/user.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
-const registerUser = asyncHandler(async (req, res) => {
-	const { name, email, password, status, role } = req.body;
+const getAllUser = asyncHandler(async (req, res) => {
 
-	// console.log(name);
+    const user = await getUser()
 
-	if (!name || !email || !password || !role) {
-		throw new ApiError(400, "Information not found");
-	}
+    if(user) throw new ApiError(400, "user not found")
 
-	const user = await registerService(name, email, password, status, role);
+    res
+    .status(200)
+    .json(new ApiResponse(200, user, "User find successful"))
+    
+})
+const getSpecificUserById = asyncHandler(async (req, res) => {
 
-	res.json(new ApiResponse("201", user, "user created successfully"));
-});
+    const id = req.params.userId
 
-const loginUser = asyncHandler(async (req, res) => {
-	const { email, password } = req.body;
+    const user = await getUserByQuery({key: "_id", value:id})
+    console.log(user);
+    
+    if(!user) throw new ApiError(400, "user not found by using id")
 
-	// console.log(email);
+    res
+    .status(200)
+    .json(new ApiResponse(200, user, "successfully find specific user"))
+    
 
-	if (!email || !password) {
-		throw new ApiError(400, "User credential not fund ");
-	}
+})
+const postUser = asyncHandler(async (req, res) => {
 
-	const { token, user } = await loginService(email, password);
-	// console.log(user);
+})
+const updateUserById = asyncHandler(async (req, res) => {
 
-	res
-		.cookie("accessToken", token)
-		.json(new ApiResponse(200, user, "Login Successful"));
-});
+})
+const deleteUserById = asyncHandler(async (req, res) => {
 
-const privateRoute = asyncHandler(async (req, res) => {
-	console.log("I am in Private Route");
+})
 
-	res.json(new ApiResponse(200, req.user, "I am from vawou"));
-});
-
-const logout = asyncHandler(async (req, res) => {
-	const option = {
-		httpOnly: true,
-		secure: true,
-	};
-	res
-		.status(200)
-		.clearCookie("accessToken", option)
-		.clearCookie("access-token", option)
-		.json(new ApiResponse(200, {}, "User Logged Out"));
-});
-
-export { registerUser, loginUser, privateRoute, logout };
+export {getAllUser, getSpecificUserById, postUser, updateUserById, deleteUserById}
