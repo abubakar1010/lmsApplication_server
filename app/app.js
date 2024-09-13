@@ -5,6 +5,7 @@ import cors from 'cors';
 import userRouter from "../routes/userRoute.js";
 import verifyToken from "../middlewares/jwtAuth.js";
 import attendanceRoute from "../routes/adminAttendanceRoute.js";
+import studentsAttendanceRoute from "../routes/studentsAttendance.js";
 
 
 const app = express();
@@ -19,6 +20,7 @@ app.use(cookieParser())
 app.use("/app/v1/auth", authRouter);
 app.use("/app/v1/users",verifyToken, userRouter)
 app.use("/app/v1/adminAttendance",verifyToken, attendanceRoute) 
+app.use("/app/v1/studentsAttendance",verifyToken, studentsAttendanceRoute) 
 
  
 export default app;

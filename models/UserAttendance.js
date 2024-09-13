@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 const userAttendanceSchema = new mongoose.Schema({
 
     user:{
-        type: mongoose.Schema.Types,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
     adminAttendance:{
-        type: mongoose.Schema.Types,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "AdminAttendance"
     }
 },
