@@ -23,4 +23,10 @@ const createNewUser = ({ name, email, password, role, status }) => {
 	return user.save();
 };
 
-export { getUserByQuery, createNewUser, getUser };
+const deleteUserByProperTy = ({ key, value }) => {
+	console.log({ key, value });
+	
+	return User.deleteOne({ [key]: value });
+};
+
+export { getUserByQuery, createNewUser, getUser, deleteUserByProperTy };
