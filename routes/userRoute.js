@@ -31,7 +31,7 @@ userRouter.route("/:userId").get(getSpecificUserById)
  * @method post
  */
 
-userRouter.route("/:userId").post(postUser)
+userRouter.route("/").post(postUser)
 
 
 /**
