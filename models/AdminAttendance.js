@@ -4,15 +4,20 @@ const adminAttendanceSchema = new mongoose.Schema({
 
     status:{
         type: String,
-        required: true
+        required: true,
+        enum:["inprogress", "completed"],
+        default: "inprogress"
     },
 
     timeLimit:{
         type: Number,
-        required: true
+        required: true,
+        max:30,
+        min:1,
+        default:10
     },
     user:{
-        type: mongoose.Schema.Types,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     }
     
